@@ -1,0 +1,67 @@
+{% extends 'skeleton.html' %}
+
+{% block title %}Signup{% endblock %}
+
+{% block content %}
+<h3 class="text-center">Sign Up</h3>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-3">
+		</div>
+		<div class="col-sm-6">
+			<form method="post" action="#">
+				<div class="mb-3 mt-3">
+					<label for="fname" class="form-label">First Name</label>
+					<input type="text" required placeholder="First Name" id="fname" class="form-control" name="fname" value="{{ request.form['fname'] }}">
+				</div>
+				<div class="mb-3 mt-3">
+					<label for="lname" class="form-label">Last Name</label>
+					<input type="text" required placeholder="Last Name" id="lname" class="form-control" name="lname" value="{{ request.form['lname'] }}">
+				</div>
+				<div class="mb-3 mt-3">
+					<label for="email" class="form-label">Email</label>
+					<input type="email" required placeholder="Email" id="email" class="form-control" name="email" value="{{ request.form['email'] }}">
+				</div>
+				<div class="mb-3 mt-3">
+					<label for="password" class="form-label">Password</label>
+					<input type="password" required placeholder="********" id="password" class="form-control" name="password" value="{{ request.form['password'] }}">
+				</div>
+
+				<button type="submit" class="btn btn-primary mt-3">Register</button>
+			</form>
+		</div>
+		<div class="col-sm-3">
+		</div>
+	</div>
+</div>
+
+<h3 class="mt-4">Below table is only for testing purposes</h3>
+<table class="table table-dark table-striped mt-3">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>First name</th>
+			<th>Last name</th>
+			<th>Email</th>
+			<th>Password</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for user in users %}
+		<tr>
+			<td>{{ user.user_id }}</td>
+			<td>{{ user.fname }}</td>
+			<td>{{ user.lname }}</td>
+			<td>{{ user.email }}</td>
+			<td>{{ user.password }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}
+
+<!-- Bootstrap JS -->
+<script src="/static/bootstrap/js/bootstrap.min.js" />
+	</body>
+</html>
+
