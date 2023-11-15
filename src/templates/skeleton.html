@@ -3,18 +3,27 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Page Title</title>
+		<title>{% block title %} {% endblock %} - App Name</title>
 
 		<!-- Bootstrap CSS -->
 		<link type="text/css" rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+
+		<style>
+			.alert {
+				padding: 20px;
+				margin: 5px;
+				color: #970020;
+				background-color: #ffd5de;
+			}
+		</style>
 	</head>
 
 	<body class="bg-dark mt-2">
-		<!-- Navbar -->
+	<!-- Navbar -->
 		<nav class="navbar navbar-expand-sm bg-primary navbar-dark">
-			<div class="container-fluid text-end">
-				<a class="navbar-brand" href="{{ url_for('home') }}">App Name</a>
-				<ul class="navbar-nav">
+			<div class="container-fluid">
+				<a class="navbar-brand ps-5" href="{{ url_for('home') }}">App Name</a>
+				<ul class="navbar-nav pe-5">
 					<li class="nav-item"><a class="nav-link active" href="{{ url_for('login_page') }}">Login</a></li>
 					<li class="nav-item"><a class="nav-link active" href="{{ url_for('signup_page') }}">Signup</a><li>
 				</ul>
@@ -25,14 +34,15 @@
 
 		<!-- Main content -->
 		<div class="container p-5 mt-5 bg-secondary">
-			<h2>Page Under Construction</h2>
-			<main class="px-3">
-				<p class="lead">This page has not been built yet.</p>
-			</main>
+			{% for message in get_flashed_messages() %}
+				<div class="alert">{{ message }}</div>
+			{% endfor %}
+			{% block content %} {% endblock %}
 		</div>
+		<!-- Main content end -->
 
 		<!-- Bootstrap JS -->
 		<script src="/static/bootstrap/js/bootstrap.min.js" />
-			</body>
+	</body>
 </html>
 

@@ -1,19 +1,100 @@
-<!DOCTYPE html>
-<html land="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Home</title>
+{% extends 'skeleton.html' %}
 
-		<!-- Bootstrap CSS -->
-		<link type="text/css" rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
-	</head>
+{% block title %}Home{% endblock %}
 
-	<body>
-		<h1>Testing bootstrap</h1>
+{% block content %}
+<h3>Search here. Go anywhere.</h3>
 
-		<!-- Bootstrap JS -->
-		<script src="/static/bootstrap/js/bootstrap.min.js" />
+<form method="get" action="#">
+	<div class="row mb-3 mt-3">
+		<div class="col">
+			<label for="departure-loc" class="form-label">Departure Location</label>
+			<input type="text" required placeholder="From" id="departure-loc" class="form-control" name="departure-loc">
+		</div>
+		<div class="col">
+			<label for="arrival-loc" class="form-label">Arrival Location</label>
+			<input type="text" required placeholder="To" id="arrival-loc" class="form-control" name="arrival-loc">
+		</div>
+	</div>
+	<div class="row mb-3 mt-3">
+		<div class="col">
+			<label for="departure-date" class="form-label">Departure Date</label>
+			<input type="datetime-local" required id="departure-date" class="form-control">
+		</div>
+		<div class="col">
+			<label for="arrival-date" class="form-label">Arrival Date</label>
+			<input type="datetime-local" required placeholder="Return Date" id="arrival-date" class="form-control">
+		</div>
+	</div>
+	<div class="row mb-3 mt-3">
+		<div class="col">
+			<div class="form-check">
+				<input type="radio" name="ticket-type" value="adult" id="radio-adult" class="form-check-input" checked>
+				<label class="form-check-label" for="radio-adult">Adult</label>
+			</div>
+			<div class="form-check">
+				<input type="radio" name="ticket-type" value="child" id="radio-child" class="form-check-input">
+				<label class="form-check-label" for="radio-child">Child</label>
+			</div>
+		</div>
+		<div class="col">
+			<div class="row">
+				<div class="col">
+					<div class="form-check">
+						<input type="radio" name="trip-type" value="round-trip" id="radio-round" class="form-check-input" checked>
+						<label class="form-check-label" for="radio-round">Round Trip</label>
+					</div>
+					<div class="form-check">
+						<input type="radio" name="trip-type" value="one-way" id="radio-one" class="form-check-input">
+						<label class="form-check-label" for="radio-one">One way</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+		<button type="submit" class="btn btn-primary mt-3">Search</button>
+</form>
+
+<h3 class="mt-4">Below table is for demonstration only! (Regardless what is given in form, same results returned)</h3>
+<table class="table table-dark table-striped">
+	<thead>
+		<tr>
+			<th>Flight ID</th>
+			<th>Departure</th>
+			<th>Destination</th>
+			<th>Departure Date</th>
+			<th>Arrival Date</th>
+			<th>Adult Ticket</th>
+			<th>Round Trip</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for flight in flights %}
+		<tr>
+			<td>{{ flight.flight_id }}</td>
+			<td>{{ flight.depart_loc }}</td>
+			<td>{{ flight.arrive_loc}}</td>
+			<td>{{ flight.depart_date }}</td>
+			<td>{{ flight.arrive_date }}</td>
+			{% if flight.adult_ticket == 1 %}
+				<td>True</td>
+			{% else %}
+				<td>False</td>
+			{% endif %}
+			{% if flight.round_trip == 1 %}
+				<td>True</td>
+			{% else %}
+				<td>False</td>
+			{% endif %}
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}
+
+<!-- Bootstrap JS -->
+<script src="/static/bootstrap/js/bootstrap.min.js" />
 	</body>
 </html>
 
