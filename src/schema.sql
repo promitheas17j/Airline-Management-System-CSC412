@@ -10,6 +10,8 @@ CREATE TABLE users (
 	UNIQUE (email)
 );
 
+DROP TABLE IF EXISTS flights;
+
 CREATE TABLE flights (
 	flight_id INTEGER PRIMARY KEY AUTOINCREMENT,
 	depart_loc CHAR(3),
