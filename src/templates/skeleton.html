@@ -23,10 +23,15 @@
 		<nav class="navbar navbar-expand-sm bg-primary navbar-dark">
 			<div class="container-fluid">
 				<a class="navbar-brand ps-5" href="{{ url_for('home') }}">App Name</a>
-				<ul class="navbar-nav pe-5">
-					<li class="nav-item"><a class="nav-link active" href="{{ url_for('login_page') }}">Login</a></li>
-					<li class="nav-item"><a class="nav-link active" href="{{ url_for('signup_page') }}">Signup</a><li>
-				</ul>
+				<div class="dropdown pe-5">
+					<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+						Menu
+					</button>
+					<ul class="dropdown-menu dropdown-menu-end">
+						<li><a class="dropdown-item" href="{{ url_for('login_page') }}">Login</a></li>
+						<li><a class="dropdown-item" href="{{ url_for('signup_page') }}">Signup</a><li>
+					</ul>
+				</div>
 			</div>
 		</nav>
 		<!-- Navbar end -->
@@ -42,7 +47,11 @@
 		<!-- Main content end -->
 
 		<!-- Bootstrap JS -->
-		<script src="/static/bootstrap/js/bootstrap.min.js" />
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		<!--
+			script src="/static/bootstrap/js/bootstrap.min.js"></script>
+			<script src="/static/bootstrap/js/popper.min.js"></script>
+		-->
 	</body>
 </html>
 
