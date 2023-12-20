@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, flash, redirect
+from flask import Flask, render_template, request, url_for, flash, redirect, session
 import sqlite3
 
 db_file_name = 'database.db'
@@ -61,11 +61,27 @@ def signup_page():
 
     return render_template("signup.html", passengers=passengers, admins=admins)
 
+# def perform_search(query, query_field):
+#     conn = get_db_connection()
+#     c = conn.cursor()
+
+#     if query_field == "pemail":
+#         results = c.execute("SELECT * FROM passengers WHERE passenger_email LIKE ?", (query,)).fetchall()
+#     elif query_field == "pid":
+#         results = c.execute("SELECT * FROM passengers WHERE passenger_id LIKE ?", (query,)).fetchall()
+#     else:
+#         results = "Empty"
+
+#     conn.close()
+
+#     return results
+
 def perform_search(query):
     conn = get_db_connection()
     c = conn.cursor()
 
-    results = c.execute("SELECT * FROM passengers WHERE passenger_email LIKE ?", (query,)).fetchall()
+    temp = c.execute("SELECT * FROM passengers WHERE passenger_email LIKE ?", (query,)).fetchall()
+    results = (temp[0][0], temp[0][1], temp[0][2], temp[0][3], temp[0][4], temp[0][5])
 
     conn.close()
 
@@ -75,10 +91,24 @@ def perform_search(query):
 def admin_search_passengers():
     return render_template("admin_search_passengers.html")
 
-@app.route('/admin_results_passengers', methods=['POST'])
+@app.route('/admin_results_passengers', methods=['GET', 'POST'])
 def admin_results_passengers():
-    query = request.form.get('passenger_email')
+    query = request.form.get('search_email')
     results = perform_search(query)
+
+    session['passenger_result'] = results
+
+    # TODO: Move reset password functionality to its own endpoint using sessions
+    if request.method == 'POST':
+        conn = get_db_connection()
+
+        new_pass = request.form.get('new_pass')
+        print("new_pass " + str(new_pass))
+    #     conn.execute('UPDATE passengers SET password = ? WHERE passenger_email=?;', (new_pass, results[0][3],))
+    #     print(new_pass)
+    #     print(conn.execute("SELECT * FROM passengers WHERE passenger_email LIKE ?", (results,)).fetchall())
+
+    #     conn.close()
 
     return render_template('admin_passenger_results.html', query=query, results=results)
 

@@ -17,7 +17,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{% set passenger = results[0] %}
+		{% set passenger = results %}
 		<tr>
 			<td>{{ passenger[0] }}</td>
 			<td>{{ passenger[1] }}</td>
@@ -25,15 +25,20 @@
 			<td>{{ passenger[3] }}</td>
 			<td>{{ passenger[4] }}</td>
 			<td>{{ passenger[5] }}</td>
-
 			<td>
-				<a href="# {# {{ url_for('admin_reset_password', passenger_id=passenger[0]) }} #}">Reset Password</a>
+				<!-- <a href="{# {{ url_for('admin_reset_password', passenger_id=passenger[0]) }} #}">Reset Password</a> -->
+				<a href="# {# {{ url_for('admin_delete_account', passenger_id=passenger[0]) }} #}">Delete Account</a>
 				</br>
-				<a href="#{# {{ url_for('admin_delete_account', passenger_id=passenger[0]) }} #}">Delete Account</a>
-				</br>
-				<a href="#{# {{ url_for('admin_cancel_reservation', passenger_id=passenger[0]) }} #}">Cancel Reservation</a>
+				<a href="# {# {{ url_for('admin_view_reservations', passenger_id=passenger[0]) }} #}">View Reservations</a>
 			</td>
 		</tr>
 	</tbody>
 </table>
+
+<form method='post' action="#">
+	<label for="new_pass" class="form-label">New password:</label>
+	<input type="password" required placeholder="*******" class="form-control" name="new_pass">
+	<button type="submit" class="btn btn-primary mt-3">Reset password</button>
+</form>
+
 {% endblock %}
