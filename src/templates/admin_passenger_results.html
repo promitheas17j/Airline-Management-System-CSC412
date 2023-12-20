@@ -1,0 +1,39 @@
+{% extends 'skeleton.html' %}
+
+{% block title %}Results{% endblock %}
+
+{% block content %}
+<h3 class="text-center">Passenger Results</h3>
+<table class="table table-dark table-striped mt-3">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>First name</th>
+			<th>Last name</th>
+			<th>Email</th>
+			<th>Password</th>
+			<th>Other</th>
+			<th>Operations</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% set passenger = results[0] %}
+		<tr>
+			<td>{{ passenger[0] }}</td>
+			<td>{{ passenger[1] }}</td>
+			<td>{{ passenger[2] }}</td>
+			<td>{{ passenger[3] }}</td>
+			<td>{{ passenger[4] }}</td>
+			<td>{{ passenger[5] }}</td>
+
+			<td>
+				<a href="# {# {{ url_for('admin_reset_password', passenger_id=passenger[0]) }} #}">Reset Password</a>
+				</br>
+				<a href="#{# {{ url_for('admin_delete_account', passenger_id=passenger[0]) }} #}">Delete Account</a>
+				</br>
+				<a href="#{# {{ url_for('admin_cancel_reservation', passenger_id=passenger[0]) }} #}">Cancel Reservation</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+{% endblock %}

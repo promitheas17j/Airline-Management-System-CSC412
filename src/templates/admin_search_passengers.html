@@ -1,0 +1,24 @@
+{% extends 'skeleton.html' %}
+
+{% block title %}Search Passengers{% endblock %}
+
+{% block content %}
+<h3 class="text-center">Search Passengers</h3>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-4">
+		</div>
+		<div class="col-sm-5">
+			<form method="post" action="/admin_results_passengers">
+				<div class="mb-3 mt-3">
+					<label for="passenger_email" class="form-label">Search:</label>
+					<input type="email" required placeholder="Passenger email" class="form-control" name="passenger_email">
+				<button type="submit" class="btn btn-primary mt-3">Search</button>
+				</div>
+			</form>
+		</div>
+		<div class="col-sm-4">
+		</div>
+	</div>
+</div>
+{% endblock %}
