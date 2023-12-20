@@ -4,7 +4,7 @@ CREATE TABLE passengers (
 	passenger_id INTEGER PRIMARY KEY AUTOINCREMENT,
 	fname VARCHAR(254) NOT NULL,
 	lname VARCHAR(254) NOT NULL,
-	passenger_email VARCHAR(254) NOT NULL,
+	passenger_email VARCHAR(254),
 	password VARCHAR(254) NOT NULL,
 	passport_no INTEGER,
 

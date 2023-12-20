@@ -13,7 +13,7 @@ cur.execute("INSERT INTO passengers (fname, lname, passenger_email, password) VA
 )
 
 cur.execute("INSERT INTO admins (fname, lname, admin_email, password, contact_no) VALUES (?, ?, ?, ?, ?)",
-            ("Jane", "Smith", "j.smith@test.com", "secret", "+123 1234567890")
+            ("Admin", "Admin", "admin@test.com", "secret", "+123 1234567890")
 )
 
 cur.execute("INSERT INTO flights (flight_no, international, depart_loc, arrive_loc, depart_date, depart_time, depart_country, arrive_country) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",

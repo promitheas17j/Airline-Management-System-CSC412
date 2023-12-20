@@ -19,8 +19,8 @@
 					<input type="text" required placeholder="Last Name" id="lname" class="form-control" name="lname" value="{{ request.form['lname'] }}">
 				</div>
 				<div class="mb-3 mt-3">
-					<label for="email" class="form-label">Email</label>
-					<input type="email" required placeholder="Email" id="email" class="form-control" name="email" value="{{ request.form['email'] }}">
+					<label for="passenger_email" class="form-label">Email</label>
+					<input type="email" required placeholder="Email" id="passenger_email" class="form-control" name="passenger_email" value="{{ request.form['passenger_email'] }}">
 				</div>
 				<div class="mb-3 mt-3">
 					<label for="password" class="form-label">Password</label>
@@ -44,24 +44,31 @@
 			<th>Last name</th>
 			<th>Email</th>
 			<th>Password</th>
+			<th>Other</th>
 		</tr>
 	</thead>
 	<tbody>
-		{% for user in users %}
+		{% for passenger in passengers %}
 		<tr>
-			<td>{{ user.user_id }}</td>
-			<td>{{ user.fname }}</td>
-			<td>{{ user.lname }}</td>
-			<td>{{ user.email }}</td>
-			<td>{{ user.password }}</td>
+			<td>{{ passenger.passenger_id }}</td>
+			<td>{{ passenger.fname }}</td>
+			<td>{{ passenger.lname }}</td>
+			<td>{{ passenger.passenger_email }}</td>
+			<td>{{ passenger.password }}</td>
+			<td>{{ passenger.passport_no }}</td>
+		</tr>
+		{% endfor %}
+
+		{% for admin in admins %}
+		<tr>
+			<td>{{ admin.admin_id }}</td>
+			<td>{{ admin.fname }}</td>
+			<td>{{ admin.lname }}</td>
+			<td>{{ admin.admin_email }}</td>
+			<td>{{ admin.password }}</td>
+			<td>{{ admin.contact_no }}</td>
 		</tr>
 		{% endfor %}
 	</tbody>
 </table>
 {% endblock %}
-
-<!-- Bootstrap JS -->
-<script src="/static/bootstrap/js/bootstrap.min.js" />
-	</body>
-</html>
-
