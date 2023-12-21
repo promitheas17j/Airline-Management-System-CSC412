@@ -20,13 +20,13 @@ def home():
 
     return render_template("index.html", flights=flights)
 
-@app.route('/passenger_login')
+@app.route('/passenger/passenger_login')
 def passenger_login_page():
-    return render_template("passenger_login.html")
+    return render_template("passenger/passenger_login.html")
 
-@app.route('/admin_login')
+@app.route('/admin/admin_login')
 def admin_login_page():
-    return render_template("admin_login.html")
+    return render_template("admin/admin_login.html")
 
 @app.route('/signup', methods=('GET', 'POST'))
 def signup_page():
@@ -87,30 +87,60 @@ def perform_search(query):
 
     return results
 
-@app.route('/admin_search_passengers')
+@app.route('/admin/admin_search_passengers')
 def admin_search_passengers():
-    return render_template("admin_search_passengers.html")
+    return render_template("admin/admin_search_passengers.html")
 
-@app.route('/admin_results_passengers', methods=['GET', 'POST'])
+@app.route('/admin/admin_results_passengers', methods=['GET', 'POST'])
 def admin_results_passengers():
     query = request.form.get('search_email')
-    results = perform_search(query)
+    # results = perform_search(query)
+    if not perform_search(query):
+        flash("Message")
+        return render_template("admin/admin_search_passengers.html")
+    else:
+        results = perform_search(query)
 
-    session['passenger_result'] = results
+    if results:
+        session['passenger_result'] = results
+        return render_template('admin/admin_results_passengers.html', query=query, results=results)
+    elif not results:
+        flash("No passenger account exists with email address " + str(query))
+        print("No passenger account found")
 
-    # TODO: Move reset password functionality to its own endpoint using sessions
+    return render_template("admin/admin_search_passengers.html")
+
+@app.route('/admin/admin_reset_password', methods=['GET', 'POST'])
+def admin_reset_password():
+    passenger = session.get('passenger_result')
+
     if request.method == 'POST':
+        new_pass = request.form.get('new_password')
+
         conn = get_db_connection()
+        conn.execute("UPDATE passengers SET password = ? WHERE passenger_id = ?", (new_pass, passenger[0],))
 
-        new_pass = request.form.get('new_pass')
-        print("new_pass " + str(new_pass))
-    #     conn.execute('UPDATE passengers SET password = ? WHERE passenger_email=?;', (new_pass, results[0][3],))
-    #     print(new_pass)
-    #     print(conn.execute("SELECT * FROM passengers WHERE passenger_email LIKE ?", (results,)).fetchall())
+        conn.commit()
+        conn.close()
 
-    #     conn.close()
+    return render_template("admin/admin_reset_password.html")
 
-    return render_template('admin_passenger_results.html', query=query, results=results)
+@app.route('/admin/admin_delete_account', methods=['GET', 'POST'])
+def admin_delete_account():
+    passenger = session.get('passenger_result')
+
+    if request.method == 'POST':
+        confirmation = request.form.get('confirm_delete')
+
+        if confirmation == "DELETE":
+            conn = get_db_connection()
+            conn.execute("DELETE FROM passengers WHERE passenger_id = ?", (passenger[0],))
+            conn.commit()
+            conn.close()
+
+            return render_template("admin/admin_search_passengers.html")
+    return render_template("admin/admin_delete_account.html")
+
 
 @app.route('/notready')
 def not_ready_page():

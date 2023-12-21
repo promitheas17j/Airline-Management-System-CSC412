@@ -1,0 +1,13 @@
+{% extends 'skeleton.html' %}
+
+{% block title %}Delete Account{% endblock %}
+
+{% block content %}
+<h3 class="text-center">Delete Passenger Account</h3>
+<form method="post" action="#">
+	<label for="confirm_delete" class="form-label">Type "DELETE" to confirm you want to delete the account:</label>
+	<input type="text" required placeholder="Type here" class="form-control" name="confirm_delete">
+	<button type="submit" class="btn btn-primary mt-3">Confirm (this action is permanent)</button>
+</form>
+
+{% endblock %}
