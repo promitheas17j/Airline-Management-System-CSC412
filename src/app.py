@@ -43,9 +43,33 @@ def passenger_login_page():
 
     return render_template("passenger/passenger_login.html")
 
-@app.route('/admin/admin_login')
+@app.route('/admin/admin_login', methods=['GET', 'POST'])
 def admin_login_page():
+    if request.method == 'POST':
+        entered_email = request.form.get('email')
+        entered_password = request.form.get('password')
+
+        try:
+            record = search_admin(entered_email)
+            print(record)
+        except:
+            flash("User does not exist")
+        else:
+            if record[3] == entered_email:
+                if record[4] == entered_password:
+                    session['logged_in_user'] = record
+                    session['logged_in_user_role'] = "admin"
+                    return redirect(url_for("home"))
+                else:
+                    flash("Email or password incorrect")
+            else:
+                flash("Email or password incorrect")
+
     return render_template("admin/admin_login.html")
+
+# @app.route('/admin/admin_login')
+# def admin_login_page():
+#     return render_template("admin/admin_login.html")
 
 @app.route('/signup', methods=('GET', 'POST'))
 def signup_page():
@@ -85,6 +109,17 @@ def search_passenger(query):
     c = conn.cursor()
 
     temp = c.execute("SELECT * FROM passengers WHERE passenger_email LIKE ?", (query,)).fetchall()
+    results = (temp[0][0], temp[0][1], temp[0][2], temp[0][3], temp[0][4], temp[0][5])
+
+    conn.close()
+
+    return results
+
+def search_admin(query):
+    conn = get_db_connection()
+    c = conn.cursor()
+
+    temp = c.execute("SELECT * FROM admins WHERE admin_email LIKE ?", (query,)).fetchall()
     results = (temp[0][0], temp[0][1], temp[0][2], temp[0][3], temp[0][4], temp[0][5])
 
     conn.close()
