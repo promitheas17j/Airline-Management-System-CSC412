@@ -1,0 +1,39 @@
+{% extends 'skeleton.html' %}
+
+{% block title %}Flights{% endblock %}
+
+{% block content %}
+<h3 class="text-center">Flight Results</h3>
+<table class="table table-dark table-striped">
+	<thead>
+		<tr>
+			<th>Flight Number</th>
+			<th>International</th>
+			<th>Departure Airport</th>
+			<th>Arrival Airport</th>
+			<th>Departure Date</th>
+			<th>Departure Time</th>
+			<th>Departure Country</th>
+			<th>Arrival Country</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for flight in flights %}
+		<tr>
+			<td>{{ flight.flight_no }}</td>
+			{% if flight.international == 1 %}
+				<td>True</td>
+			{% else %}
+				<td>False</td>
+			{% endif %}
+			<td>{{ flight.depart_loc }}</td>
+			<td>{{ flight.arrive_loc}}</td>
+			<td>{{ flight.depart_date }}</td>
+			<td>{{ flight.depart_time }}</td>
+			<td>{{ flight.depart_country }}</td>
+			<td>{{ flight.arrive_country }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}

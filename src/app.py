@@ -20,8 +20,29 @@ def home():
 
     return render_template("index.html", flights=flights)
 
-@app.route('/passenger/passenger_login')
+@app.route('/passenger/passenger_login', methods=['GET', 'POST'])
 def passenger_login_page():
+    if request.method == 'POST':
+        entered_email = request.form.get('email')
+        print("entered_email " + entered_email)
+        entered_password = request.form.get('password')
+        print("entered_password " + entered_password)
+
+        try:
+            record = perform_search(entered_email)
+            # return record[0]
+        except:
+            flash("User does not exist")
+        else:
+            if record[3] == entered_email:
+                if record[4] == entered_password:
+                    session['logged_in_user'] = record
+                    return redirect(url_for("home"))
+                else:
+                    flash("Email or password incorrect")
+            else:
+                flash("Email or password incorrect")
+
     return render_template("passenger/passenger_login.html")
 
 @app.route('/admin/admin_login')
@@ -61,21 +82,6 @@ def signup_page():
 
     return render_template("signup.html", passengers=passengers, admins=admins)
 
-# def perform_search(query, query_field):
-#     conn = get_db_connection()
-#     c = conn.cursor()
-
-#     if query_field == "pemail":
-#         results = c.execute("SELECT * FROM passengers WHERE passenger_email LIKE ?", (query,)).fetchall()
-#     elif query_field == "pid":
-#         results = c.execute("SELECT * FROM passengers WHERE passenger_id LIKE ?", (query,)).fetchall()
-#     else:
-#         results = "Empty"
-
-#     conn.close()
-
-#     return results
-
 def perform_search(query):
     conn = get_db_connection()
     c = conn.cursor()
@@ -91,8 +97,8 @@ def perform_search(query):
 def admin_search_passengers():
     return render_template("admin/admin_search_passengers.html")
 
-@app.route('/admin/admin_results_passengers', methods=['GET', 'POST'])
-def admin_results_passengers():
+@app.route('/admin/admin_passenger_results', methods=['GET', 'POST'])
+def admin_passenger_results():
     query = request.form.get('search_email')
     # results = perform_search(query)
     if not perform_search(query):
@@ -103,7 +109,7 @@ def admin_results_passengers():
 
     if results:
         session['passenger_result'] = results
-        return render_template('admin/admin_results_passengers.html', query=query, results=results)
+        return render_template('admin/admin_passenger_results.html', query=query, results=results)
     elif not results:
         flash("No passenger account exists with email address " + str(query))
         print("No passenger account found")
@@ -141,6 +147,41 @@ def admin_delete_account():
             return render_template("admin/admin_search_passengers.html")
     return render_template("admin/admin_delete_account.html")
 
+@app.route('/passenger/edit_info', methods=['GET', 'POST'])
+def passenger_edit_info():
+    passenger_id = session.get("logged_in_user")[0]
+    print(passenger_id)
+
+    if request.method == 'POST':
+        entered_email = request.form.get("email")
+        entered_password = request.form.get("password")
+        entered_passport_no = request.form.get("passport_no")
+
+        conn = get_db_connection()
+        if entered_email:
+            conn.execute("UPDATE passengers SET passenger_email = ? WHERE passenger_id = ?", (entered_email, passenger_id,))
+            conn.commit()
+        if entered_password:
+            conn.execute("UPDATE passengers SET password = ? WHERE passenger_id = ?", (entered_password, passenger_id,))
+            conn.commit()
+        if entered_passport_no:
+            conn.execute("UPDATE passengers SET passport_no = ? WHERE passenger_id = ?", (entered_passport_no, passenger_id,))
+            conn.commit()
+
+        conn.close()
+    return render_template("passenger/edit_info.html")
+
+@app.route('/passenger/passenger_search_flights')
+def passenger_search_flights():
+    return render_template("passenger/passenger_search_flights.html")
+
+@app.route('/passenger/passenger_flight_results', methods=['GET', 'POST'])
+def passenger_flight_results():
+    conn = get_db_connection()
+    flights = conn.execute("SELECT * FROM flights").fetchall()
+    conn.close()
+
+    return render_template("passenger/flight_results.html", flights=flights)
 
 @app.route('/notready')
 def not_ready_page():

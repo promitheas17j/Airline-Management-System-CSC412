@@ -1,0 +1,37 @@
+{% extends 'skeleton.html' %}
+
+{% block title %}Search Flights{% endblock %}
+
+{% block content %}
+<h3 class="text-center">Search Flights</h3>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-4">
+		</div>
+		<div class="col-sm-5">
+			<form method="post" action="/passenger/passenger_flight_results">
+				<div class="row mb-3 mt-3">
+					<div class="col">
+						<label for="departure-loc" class="form-label">Departure Airport</label>
+						<input type="text" required placeholder="From" id="departure-loc" class="form-control" name="departure-loc">
+					</div>
+					<div class="col">
+						<label for="arrival-loc" class="form-label">Arrival Airport</label>
+						<input type="text" required placeholder="To" id="arrival-loc" class="form-control" name="arrival-loc">
+					</div>
+				</div>
+				<div class="row mb-3 mt-3">
+					<div class="col">
+						<label for="departure-date" class="form-label">Departure Date</label>
+						<input type="date" required id="departure-date" class="form-control">
+					</div>
+				</div>
+
+				<button type="submit" class="btn btn-primary mt-3">Search</button>
+			</form>
+		</div>
+		<div class="col-sm-4">
+		</div>
+	</div>
+</div>
+{% endblock %}
