@@ -13,7 +13,7 @@
 				padding: 20px;
 				margin: 5px;
 				color: #970020;
-				/* background-color: #ffd5de; */
+				background-color: #ffd5de;
 			}
 		</style>
 	</head>
@@ -44,8 +44,8 @@
 					{% elif role == "admin" %}
 						<ul class="dropdown-menu dropdown-menu-end">
 							<li><a class="dropdown-item" href="{{ url_for('admin_search_passengers') }}">Search Passengers</a><li>
-									<li><a class="dropdown-item" href="{{ url_for('admin_manage_flights') }}">Manage Flights</a><li>
-											<li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a><li>
+							<li><a class="dropdown-item" href="{{ url_for('admin_manage_flights') }}">Manage Flights</a><li>
+							<li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a><li>
 						</ul>
 					{% else %}
 						<ul class="dropdown-menu dropdown-menu-end">
