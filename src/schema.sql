@@ -49,3 +49,14 @@ CREATE TABLE reservations (
 	FOREIGN KEY (passenger_id) REFERENCES passengers(passenger_id),
 	FOREIGN KEY (flight_no) REFERENCES flights(flight_no)
 );
+
+DROP TABLE IF EXISTS booked_flights;
+
+CREATE TABLE booked_flights (
+	booking_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	passenger_id INTEGER,
+	flight_no VARCHAR(6),
+
+	FOREIGN KEY (passenger_id) REFERENCES passengers(passenger_id),
+	FOREIGN KEY (flight_no) REFERENCES flights(flight_no)
+);

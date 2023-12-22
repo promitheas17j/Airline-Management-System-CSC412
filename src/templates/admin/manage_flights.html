@@ -34,13 +34,13 @@
 				<td>{{ flight[5] }}</td>
 				<td>{{ flight[6] }}</td>
 				<td>{{ flight[7] }}</td>
-				<td><a href="{{ url_for('edit_flight', flight_number=flight[0])}}">Edit Flight</a></td>
+				<td><a href="{{ url_for('admin_edit_flight', flight_number=flight[0])}}">Edit Flight</a></td>
 			</tr>
 		{% endfor %}
 		</form>
 	</tbody>
 </table>
 <div class="text-center">
-	<a class="btn btn-primary" href="{{ url_for('add_flight') }}">Add Flight</a>
+	<a class="btn btn-primary" href="{{ url_for('admin_add_flight') }}">Add Flight</a>
 </div>
 {% endblock %}

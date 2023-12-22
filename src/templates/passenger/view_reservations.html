@@ -19,23 +19,23 @@
 		</tr>
 	</thead>
 	<tbody>
-		{% for reservation in reservations %}
+		{% for booking in bookings %}
 		<tr>
-			<td>{{ reservation.flight_no }}</td>
-			{% if reservation.international == 1 %}
+			<td>{{ booking.flight_no }}</td>
+			{% if booking.international == 1 %}
 				<td>True</td>
 			{% else %}
 				<td>False</td>
 			{% endif %}
-			<td>{{ reservation.depart_loc }}</td>
-			<td>{{ reservation.arrive_loc}}</td>
-			<td>{{ reservation.depart_date }}</td>
-			<td>{{ reservation.depart_time }}</td>
-			<td>{{ reservation.depart_country }}</td>
-			<td>{{ reservation.arrive_country }}</td>
+			<td>{{ booking.depart_loc }}</td>
+			<td>{{ booking.arrive_loc}}</td>
+			<td>{{ booking.depart_date }}</td>
+			<td>{{ booking.depart_time }}</td>
+			<td>{{ booking.depart_country }}</td>
+			<td>{{ booking.arrive_country }}</td>
 			<td>
 				<form method="post" action="#">
-					<input type="hidden" name="flight_number" value="{{ reservation.flight_no }}">
+					<input type="hidden" name="flight_number" value="{{ booking.flight_no }}">
 					<button type="submit" class="btn btn-primary">Cancel reservation</button>
 				</form>
 			</td>

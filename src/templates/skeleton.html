@@ -27,17 +27,31 @@
 					<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
 						Menu
 					</button>
-					<ul class="dropdown-menu dropdown-menu-end">
-						<li><a class="dropdown-item" href="{{ url_for('passenger_login_page') }}">Passenger Login</a></li>
-						<li><a class="dropdown-item" href="{{ url_for('admin_login_page') }}">Admin Login</a></li>
-						<li><a class="dropdown-item" href="{{ url_for('signup_page') }}">Signup</a><li>
-						<li><a class="dropdown-item" href="{{ url_for('admin_search_passengers') }}">Search Passengers</a><li>
-						<li><a class="dropdown-item" href="{{ url_for('manage_flights') }}">Manage Flights</a><li>
-						<li><a class="dropdown-item" href="{{ url_for('passenger_edit_info') }}">Edit Account</a><li>
-						<li><a class="dropdown-item" href="{{ url_for('passenger_search_flights') }}">Passenger Search Flights</a><li>
-						<li><a class="dropdown-item" href="{{ url_for('view_reservations') }}">View Reservations</a><li>
-						<li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a><li>
-					</ul>
+					{% if role == "None" %}
+						<ul class="dropdown-menu dropdown-menu-end">
+							<li><a class="dropdown-item" href="{{ url_for('passenger_login_page') }}">Passenger Login</a></li>
+							<li><a class="dropdown-item" href="{{ url_for('admin_login_page') }}">Admin Login</a></li>
+							<li><a class="dropdown-item" href="{{ url_for('signup_page') }}">Signup</a><li>
+						</ul>
+					{% elif role == "passenger" %}
+						<ul class="dropdown-menu dropdown-menu-end">
+							<li><a class="dropdown-item" href="{{ url_for('passenger_edit_info') }}">Edit Account</a><li>
+							<li><a class="dropdown-item" href="{{ url_for('passenger_search_flights') }}">Search Flights</a><li>
+							<li><a class="dropdown-item" href="{{ url_for('passenger_view_reservations') }}">View Reservations</a><li>
+							<li><a class="dropdown-item" href="{{ url_for('passenger_view_cart') }}">View Cart</a><li>
+							<li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a><li>
+						</ul>
+					{% elif role == "admin" %}
+						<ul class="dropdown-menu dropdown-menu-end">
+							<li><a class="dropdown-item" href="{{ url_for('admin_search_passengers') }}">Search Passengers</a><li>
+									<li><a class="dropdown-item" href="{{ url_for('admin_manage_flights') }}">Manage Flights</a><li>
+											<li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a><li>
+						</ul>
+					{% else %}
+						<ul class="dropdown-menu dropdown-menu-end">
+							<li>ELSE HIT</li>
+						</ul>
+					{% endif %}
 				</div>
 			</div>
 		</nav>
