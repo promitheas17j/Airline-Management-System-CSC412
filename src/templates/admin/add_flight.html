@@ -4,24 +4,39 @@
 
 {% block content %}
 <h3 class="text-center">Add Flight</h3>
-<table class="table table-dark table-striped">
-	<thead>
-		<tr>
-			<th>Flight Number</th>
-			<th>International</th>
-			<th>Departure Airport</th>
-			<th>Arrival Airport</th>
-			<th>Departure Date</th>
-			<th>Departure Time</th>
-			<th>Departure Country</th>
-			<th>Arrival Country</th>
-			<th>Edit Flight</th>
-		</tr>
-	</thead>
-	<tbody>
-	</tbody>
-</table>
-<div class="text-center">
-	<a class="btn btn-primary" href="{{ url_for('add_flight') }}">Add Flight</a>
-</div>
+<form action="#" method="post">
+	<table class="table table-dark table-striped">
+		<thead>
+			<tr>
+				<th>Flight Number</th>
+				<th>International</th>
+				<th>Departure Airport</th>
+				<th>Arrival Airport</th>
+				<th>Departure Date</th>
+				<th>Departure Time</th>
+				<th>Departure Country</th>
+				<th>Arrival Country</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><input type="text" placeholder="Flight Number" class="form-control" name="flight_number" required></td>
+				<td>
+					<div class="text-center">
+						<input type="checkbox" class="form-check-input" name="international" checked>
+					</div>
+				</td>
+				<td><input type="text" placeholder="Departure Airport" class="form-control" name="depart_loc" required></td>
+				<td><input type="text" placeholder="Arrival Airport" class="form-control" name="arrive_loc" required></td>
+				<td><input type="date" class="form-control" name="depart_date" required></td>
+				<td><input type="time" step="1" class="form-control" name="depart_time" required></td>
+				<td><input type="text" placeholder="Departure Country" class="form-control" name="depart_country" required></td>
+				<td><input type="text" placeholder="Arrival Country" class="form-control" name="arrive_country" required></td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="text-center">
+		<button class="btn btn-primary">Add Flight</button>
+	</div>
+</form>
 {% endblock %}

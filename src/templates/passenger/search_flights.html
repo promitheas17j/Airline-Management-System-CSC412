@@ -14,11 +14,11 @@
 				<div class="row mb-3 mt-3">
 					<div class="col">
 						<label for="departure-loc" class="form-label">Departure Airport</label>
-						<input type="text" required placeholder="From" id="departure-loc" class="form-control" name="departure-loc">
+						<input type="text" pattern="[A-Z]{3}" required placeholder="From" id="departure-loc" class="form-control" name="departure-loc">
 					</div>
 					<div class="col">
 						<label for="arrival-loc" class="form-label">Arrival Airport</label>
-						<input type="text" required placeholder="To" id="arrival-loc" class="form-control" name="arrival-loc">
+						<input type="text" pattern="[A-Z]{3}" required placeholder="To" id="arrival-loc" class="form-control" name="arrival-loc">
 					</div>
 					<div class="col mb-3 mt-3">
 						<button type="submit" class="btn btn-primary mt-3">Search</button>
