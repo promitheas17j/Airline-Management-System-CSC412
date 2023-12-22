@@ -15,6 +15,7 @@
 			<th>Departure Time</th>
 			<th>Departure Country</th>
 			<th>Arrival Country</th>
+			<th>Edit Flight</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -23,64 +24,23 @@
 			<tr>
 				<td>{{ flight[0] }}</td>
 				{% if flight[1] == 1 %}
-				<td>True</td>
+					<td>True</td>
 				{% else %}
-				<td>False</td>
+					<td>False</td>
 				{% endif %}
-				<td>
-					{{ flight[2] }}
-					</br>
-					<input type="text" placeholder="New Departure Airport" id="depart_loc" name="depart_loc" class="form-control">
-				</td>
-				<td>
-					{{ flight[3] }}
-					</br>
-					<input type="text" placeholder="New Arrival Airport" id="arrive_loc" name="arrive_loc" class="form-control">
-				</td>
-				<td>
-					{{ flight[4] }}
-					</br>
-					<input type="date" placeholder="New Departure Date" id="depart_date" name="depart_date" class="form-control">
-				</td>
-				<td>
-					{{ flight[5] }}
-					</br>
-					<input type="time" placeholder="New Departure Time" id="depart_time" name="depart_time" class="form-control">
-				</td>
+				<td>{{ flight[2] }}</td>
+				<td>{{ flight[3] }}</td>
+				<td>{{ flight[4] }}</td>
+				<td>{{ flight[5] }}</td>
 				<td>{{ flight[6] }}</td>
 				<td>{{ flight[7] }}</td>
+				<td><a href="{{ url_for('edit_flight', flight_number=flight[0])}}">Edit Flight</a></td>
 			</tr>
 		{% endfor %}
-			<tr>
-				<td>
-					<input type="text" placeholder="New Flight Number" id="flight_no" name="flight_no" class="form-control">
-				</td>
-				<td>
-					<div class="text-center">
-						<input type="checkbox" name="international" value="international" class="form-check-input" checked>
-					</div>
-				</td>
-				<td>
-					<input type="text" placeholder="New Departure Airport" name="depart_loc" class="form-control">
-				</td>
-				<td>
-					<input type="text" placeholder="New Arrival Airport" name="arrive_loc" class="form-control">
-				</td>
-				<td>
-					<input type="date" name="depart_date" class="form-control">
-				</td>
-				<td>
-					<input type="time" name="depart_time" class="form-control">
-				</td>
-				<td>
-					<input type="text" placeholder="New Departure Country" name="depart_country" class="form-control">
-				</td>
-				<td>
-					<input type="text" placeholder="New Arrival Country" name="arrive_country" class="form-control">
-				</td>
-			</tr>
-			<button type="submit" class="btn btn-primary mt-3">Commit Changes</button>
 		</form>
 	</tbody>
 </table>
+<div class="text-center">
+	<a class="btn btn-primary" href="{{ url_for('add_flight') }}">Add Flight</a>
+</div>
 {% endblock %}

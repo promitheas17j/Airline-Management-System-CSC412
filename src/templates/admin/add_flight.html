@@ -1,0 +1,27 @@
+{% extends 'skeleton_wide.html' %}
+
+{% block title %}Add Flight{% endblock %}
+
+{% block content %}
+<h3 class="text-center">Add Flight</h3>
+<table class="table table-dark table-striped">
+	<thead>
+		<tr>
+			<th>Flight Number</th>
+			<th>International</th>
+			<th>Departure Airport</th>
+			<th>Arrival Airport</th>
+			<th>Departure Date</th>
+			<th>Departure Time</th>
+			<th>Departure Country</th>
+			<th>Arrival Country</th>
+			<th>Edit Flight</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+<div class="text-center">
+	<a class="btn btn-primary" href="{{ url_for('add_flight') }}">Add Flight</a>
+</div>
+{% endblock %}

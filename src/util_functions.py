@@ -41,3 +41,17 @@ def check_reservation_status(passenger_id, flight_number):
     ).fetchone()
 
     conn.close()
+
+def update_flight(flight_no, depart_loc, arrive_loc, depart_date, depart_time, depart_country, arrive_country):
+    conn = sqlite3.connect("database.db")
+    c = conn.cursor()
+
+    query = """
+        UPDATE flights
+        SET depart_loc = ?, arrive_loc = ?, depart_date = ?, depart_time = ?, depart_country = ?, arrive_country = ?
+        WHERE flight_no = ?
+    """
+    c.execute(query, (depart_loc, arrive_loc, depart_date, depart_time, depart_country, arrive_country, flight_no))
+    
+    conn.commit()
+    conn.close()

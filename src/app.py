@@ -227,43 +227,88 @@ def admin_delete_account():
     return render_template("admin/admin_delete_account.html")
 
 
-@app.route("/admin/manage_flights", methods=['GET', 'POST'])
+# @app.route("/admin/manage_flights", methods=['GET', 'POST'])
+# def manage_flights():
+#     logged_in_user_role = util_functions.get_logged_in_user_role()
+
+#     if logged_in_user_role != "admin":
+#         return redirect(url_for("home"))
+#     else:
+#         if request.method == "POST":
+#             flight_nos = request.form.getlist("flight_no[]")
+#             depart_locs = request.form.getlist("depart_loc[]")
+#             arrive_locs = request.form.getlist("arrive_loc[]")
+#             depart_dates = request.form.getlist("depart_date[]")
+#             depart_times = request.form.getlist("depart_time[]")
+#             depart_countries = request.form.getlist("depart_country[]")
+#             arrive_countries = request.form.getlist("arrive_country[]")
+
+#             for i in range(len(flight_nos)):
+#                 flight_no = flight_nos[i]
+#                 depart_loc = depart_locs[i]
+#                 arrive_loc = arrive_locs[i]
+#                 depart_date = depart_dates[i]
+#                 depart_time = depart_times[i]
+#                 depart_country = depart_countries[i]
+#                 arrive_country = arrive_countries[i]
+
+#                 print(flight_no, depart_loc, arrive_loc, depart_date, depart_time, depart_country, arrive_country)
+
+#                 util_functions.update_flight(flight_no, depart_loc, arrive_loc, depart_date, depart_time, depart_country, arrive_country)
+#             return redirect(url_for("manage_flights"))
+
+#     all_flights = util_functions.get_available_flights(None)
+
+#     return render_template("admin/manage_flights.html", flights=all_flights)
+
+
+@app.route("/admin/manage_flights", methods=["GET", "POST"])
 def manage_flights():
     logged_in_user_role = util_functions.get_logged_in_user_role()
 
-    if logged_in_user_role not "admin":
+    if logged_in_user_role != "admin":
         return redirect(url_for("home"))
-    all_flights = util_functions.get_available_flights(None)
+    else:
 
-    return render_template("admin/manage_flights.html", flights=all_flights)
-
-
-# @app.route('/passenger/edit_info', methods=['GET', 'POST'])
-# def passenger_edit_info():
-#     passenger_id = session.get("logged_in_user")[0]
-
-#     if request.method == 'POST':
-#         entered_email = request.form.get("email")
-#         entered_password = request.form.get("password")
-#         entered_passport_no = request.form.get("passport_no")
-
-#         conn = get_db_connection()
-#         if entered_email:
-#             conn.execute("UPDATE passengers SET passenger_email = ? WHERE passenger_id = ?", (entered_email, passenger_id,))
-#             conn.commit()
-#         if entered_password:
-#             conn.execute("UPDATE passengers SET password = ? WHERE passenger_id = ?", (entered_password, passenger_id,))
-#             conn.commit()
-#         if entered_passport_no:
-#             conn.execute("UPDATE passengers SET passport_no = ? WHERE passenger_id = ?", (entered_passport_no, passenger_id,))
-#             conn.commit()
-
-#         conn.close()
-#     return render_template("passenger/edit_info.html")
+        all_flights = util_functions.get_available_flights(None)
+        return render_template("admin/manage_flights.html", flights=all_flights)
 
 
+@app.route('/admin/edit_flight/<flight_number>', methods=['GET', 'POST'])
+def edit_flight(flight_number):
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute("SELECT * FROM flights WHERE flight_no = ?", (flight_number,))
+    flight = c.fetchone()
+    conn.close()
+
+    if request.method == 'POST':
+        depart_loc = request.form.get("depart_loc")
+        arrive_loc = request.form.get("arrive_loc")
+        depart_date = request.form.get("depart_date")
+        depart_time = request.form.get("depart_time")
+
+        conn = get_db_connection()
+        if depart_loc:
+            conn.execute("UPDATE flights SET depart_loc = ? WHERE flight_no = ?", (depart_loc, flight_number,))
+            conn.commit()
+        if arrive_loc:
+            conn.execute("UPDATE flights SET arrive_loc = ? WHERE flight_no = ?", (arrive_loc, flight_number,))
+            conn.commit()
+        if depart_date:
+            conn.execute("UPDATE flights SET depart_date = ? WHERE flight_no = ?", (depart_date, flight_number,))
+            conn.commit()
+        if depart_time:
+            conn.execute("UPDATE flights SET depart_time = ? WHERE flight_no = ?", (depart_time, flight_number,))
+            conn.commit()
+
+        conn.close()
+    return render_template("admin/edit_flight.html", flight=flight)
 
 
+@app.route("/admin/add_flight", methods=["GET", "POST"])
+def add_flight():
+    return render_template("admin/add_flight.html")
 
 @app.route('/passenger/edit_info', methods=['GET', 'POST'])
 def passenger_edit_info():

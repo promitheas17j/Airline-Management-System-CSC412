@@ -1,0 +1,62 @@
+{% extends 'skeleton_wide.html' %}
+
+{% block title %}Edit Flight{% endblock %}
+
+{% block content %}
+<h3 class="text-center">Edit Flight Details</h3>
+<div class="container-fluid">
+	<table class="table table-dark table-striped">
+		<thead>
+			<tr>
+				<th>Flight Number</th>
+				<th>International</th>
+				<th>Departure Airport</th>
+				<th>Arrival Airport</th>
+				<th>Departure Date</th>
+				<th>Departure Time</th>
+				<th>Departure Country</th>
+				<th>Arrival Country</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{{ flight[0] }}</td>
+				{% if flight[1] == 1 %}
+				<td>True</td>
+				{% else %}
+				<td>False</td>
+				{% endif %}
+				<td>{{ flight[2] }}</td>
+				<td>{{ flight[3] }}</td>
+				<td>{{ flight[4] }}</td>
+				<td>{{ flight[5] }}</td>
+				<td>{{ flight[6] }}</td>
+				<td>{{ flight[7] }}</td>
+			</tr>
+			<tr>
+				<form action=" " method="post">
+					<td></td>
+					<td></td>
+					<td>
+						<input type="text" placeholder="New Departure Airport" name="depart_loc" class="form-control">
+					</td>
+					<td>
+						<input type="text" placeholder="New Arrival Airport" name="arrive_loc" class="form-control">
+					</td>
+					<td>
+						<input type="date" name="depart_date" class="form-control">
+					</td>
+					<td>
+						<input type="time" step="1" name="depart_time" class="form-control">
+					</td>
+					<td></td>
+					<td></td>
+				</tr>
+		</tbody>
+	</table>
+	<div class="text-center">
+		<button type="submit" class="btn btn-primary">Commit Changes</button>
+	</div>
+	</form>
+</div>
+{% endblock %}
