@@ -1,0 +1,46 @@
+{% extends 'skeleton.html' %}
+
+{% block title %}View Reservations{% endblock %}
+
+{% block content %}
+<h3 class="text-center">Your Reservations</h3>
+<table class="table table-dark table-striped">
+	<thead>
+		<tr>
+			<th>Flight Number</th>
+			<th>International</th>
+			<th>Departure Airport</th>
+			<th>Arrival Airport</th>
+			<th>Departure Date</th>
+			<th>Departure Time</th>
+			<th>Departure Country</th>
+			<th>Arrival Country</th>
+			<th>Operations</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for reservation in reservations %}
+		<tr>
+			<td>{{ reservation.flight_no }}</td>
+			{% if reservation.international == 1 %}
+				<td>True</td>
+			{% else %}
+				<td>False</td>
+			{% endif %}
+			<td>{{ reservation.depart_loc }}</td>
+			<td>{{ reservation.arrive_loc}}</td>
+			<td>{{ reservation.depart_date }}</td>
+			<td>{{ reservation.depart_time }}</td>
+			<td>{{ reservation.depart_country }}</td>
+			<td>{{ reservation.arrive_country }}</td>
+			<td>
+				<form method="post" action="#">
+					<input type="hidden" name="flight_number" value="{{ reservation.flight_no }}">
+					<button type="submit" class="btn btn-primary">Cancel reservation</button>
+				</form>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}

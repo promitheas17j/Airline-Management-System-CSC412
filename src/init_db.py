@@ -20,10 +20,5 @@ cur.execute("INSERT INTO flights (flight_no, international, depart_loc, arrive_l
             ("AB1234", 1, "LCA", "SOF", "2023-12-25", "19:45:20", "Cyprus", "Bulgaria")
 )
 
-
-cur.execute("INSERT INTO reservations (passenger_id, flight_no) VALUES (?, ?)",
-            (1, "AB1234")
-)
-
 connection.commit()
 connection.close()

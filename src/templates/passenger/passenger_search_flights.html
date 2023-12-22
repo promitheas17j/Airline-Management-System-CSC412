@@ -3,6 +3,7 @@
 {% block title %}Search Flights{% endblock %}
 
 {% block content %}
+
 <h3 class="text-center">Search Flights</h3>
 <div class="container-fluid">
 	<div class="row">
@@ -19,19 +20,53 @@
 						<label for="arrival-loc" class="form-label">Arrival Airport</label>
 						<input type="text" required placeholder="To" id="arrival-loc" class="form-control" name="arrival-loc">
 					</div>
+					<div class="col mb-3 mt-3">
+						<button type="submit" class="btn btn-primary mt-3">Search</button>
+					</div>
 				</div>
-				<!-- <div class="row mb-3 mt-3"> -->
-				<!-- 	<div class="col"> -->
-				<!-- 		<label for="departure-date" class="form-label">Departure Date</label> -->
-				<!-- 		<input type="date" required id="departure-date" class="form-control" name="departure-date"> -->
-				<!-- 	</div> -->
-				<!-- </div> -->
-
-				<button type="submit" class="btn btn-primary mt-3">Search</button>
 			</form>
 		</div>
 		<div class="col-sm-4">
 		</div>
 	</div>
+
+	<table class="table table-dark table-striped mt-3">
+		<thead>
+			<tr>
+				<th>Flight Number</th>
+				<th>International</th>
+				<th>Departure Airport</th>
+				<th>Arrival Airport</th>
+				<th>Departure Date</th>
+				<th>Departure Time</th>
+				<th>Departure Country</th>
+				<th>Arrival Country</th>
+				<th>Reservation Status</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for available_flight in available_flights %}
+				<tr>
+					<td>{{ available_flight[0] }}</td>
+					{% if available_flight[1] == 1 %}
+					<td>True</td>
+					{% else %}
+					<td>False</td>
+					{% endif %}
+					<td>{{ available_flight[2] }}</td>
+					<td>{{ available_flight[3] }}</td>
+					<td>{{ available_flight[4] }}</td>
+					<td>{{ available_flight[5] }}</td>
+					<td>{{ available_flight[6] }}</td>
+					<td>{{ available_flight[7] }}</td>
+					{% if available_flight[8] == 1 %}
+						<td>Reserved</td>
+					{% else %}
+					<td></td>
+					{% endif %}
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 </div>
 {% endblock %}

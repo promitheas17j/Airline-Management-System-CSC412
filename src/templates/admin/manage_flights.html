@@ -1,0 +1,86 @@
+{% extends 'skeleton_wide.html' %}
+
+{% block title %}Manage Flights{% endblock %}
+
+{% block content %}
+<h3 class="text-center">Manage Flights</h3>
+<table class="table table-dark table-striped">
+	<thead>
+		<tr>
+			<th>Flight Number</th>
+			<th>International</th>
+			<th>Departure Airport</th>
+			<th>Arrival Airport</th>
+			<th>Departure Date</th>
+			<th>Departure Time</th>
+			<th>Departure Country</th>
+			<th>Arrival Country</th>
+		</tr>
+	</thead>
+	<tbody>
+		<form action="#" method="post">
+			{% for flight in flights %}
+			<tr>
+				<td>{{ flight[0] }}</td>
+				{% if flight[1] == 1 %}
+				<td>True</td>
+				{% else %}
+				<td>False</td>
+				{% endif %}
+				<td>
+					{{ flight[2] }}
+					</br>
+					<input type="text" placeholder="New Departure Airport" id="depart_loc" name="depart_loc" class="form-control">
+				</td>
+				<td>
+					{{ flight[3] }}
+					</br>
+					<input type="text" placeholder="New Arrival Airport" id="arrive_loc" name="arrive_loc" class="form-control">
+				</td>
+				<td>
+					{{ flight[4] }}
+					</br>
+					<input type="date" placeholder="New Departure Date" id="depart_date" name="depart_date" class="form-control">
+				</td>
+				<td>
+					{{ flight[5] }}
+					</br>
+					<input type="time" placeholder="New Departure Time" id="depart_time" name="depart_time" class="form-control">
+				</td>
+				<td>{{ flight[6] }}</td>
+				<td>{{ flight[7] }}</td>
+			</tr>
+		{% endfor %}
+			<tr>
+				<td>
+					<input type="text" placeholder="New Flight Number" id="flight_no" name="flight_no" class="form-control">
+				</td>
+				<td>
+					<div class="text-center">
+						<input type="checkbox" name="international" value="international" class="form-check-input" checked>
+					</div>
+				</td>
+				<td>
+					<input type="text" placeholder="New Departure Airport" name="depart_loc" class="form-control">
+				</td>
+				<td>
+					<input type="text" placeholder="New Arrival Airport" name="arrive_loc" class="form-control">
+				</td>
+				<td>
+					<input type="date" name="depart_date" class="form-control">
+				</td>
+				<td>
+					<input type="time" name="depart_time" class="form-control">
+				</td>
+				<td>
+					<input type="text" placeholder="New Departure Country" name="depart_country" class="form-control">
+				</td>
+				<td>
+					<input type="text" placeholder="New Arrival Country" name="arrive_country" class="form-control">
+				</td>
+			</tr>
+			<button type="submit" class="btn btn-primary mt-3">Commit Changes</button>
+		</form>
+	</tbody>
+</table>
+{% endblock %}

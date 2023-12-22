@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, url_for, flash, redirect, session
 import sqlite3
+import util_functions
 
 db_file_name = 'database.db'
 
@@ -8,9 +9,69 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+
+def search_passenger(query):
+    conn = get_db_connection()
+    c = conn.cursor()
+
+    temp = c.execute("SELECT * FROM passengers WHERE passenger_email LIKE ?", (query,)).fetchall()
+    results = (temp[0][0], temp[0][1], temp[0][2], temp[0][3], temp[0][4], temp[0][5])
+
+    conn.close()
+
+    return results
+
+
+def search_admin(query):
+    conn = get_db_connection()
+    c = conn.cursor()
+
+    temp = c.execute("SELECT * FROM admins WHERE admin_email LIKE ?", (query,)).fetchall()
+    results = (temp[0][0], temp[0][1], temp[0][2], temp[0][3], temp[0][4], temp[0][5])
+
+    conn.close()
+
+    return results
+
+
+def search_flights(departure_airport, arrival_airport):
+    conn = get_db_connection()
+    c = conn.cursor()
+
+    query = """
+        SELECT flights.*,
+               CASE WHEN reservations.passenger_id IS NOT NULL THEN 1 ELSE 0 END AS reserved_by_user
+        FROM flights
+        LEFT JOIN reservations ON flights.flight_no = reservations.flight_no
+        WHERE depart_loc = ? AND arrive_loc = ?
+    """
+    c.execute(query, (departure_airport, arrival_airport,))
+    matching_flights = c.fetchall()
+
+    conn.close()
+    return matching_flights
+
+
+# def search_flights(departure_airport, arrival_airport):
+#     conn = get_db_connection()
+#     c = conn.cursor()
+
+#     query = """
+#         SELECT *
+#         FROM flights
+#         WHERE depart_loc = ? AND arrive_loc = ?
+#     """
+#     c.execute(query, (departure_airport, arrival_airport))
+#     matching_flights = c.fetchall()
+
+#     conn.close()
+#     return matching_flights
+
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secretkey'
 app.debug = True
+
 
 @app.route('/')
 def home():
@@ -19,6 +80,12 @@ def home():
     conn.close()
 
     return render_template("index.html", flights=flights)
+
+@app.route("/logout")
+def logout():
+    session['logged_in_user_role'] = "None"
+    return redirect(url_for("home"))
+
 
 @app.route('/passenger/passenger_login', methods=['GET', 'POST'])
 def passenger_login_page():
@@ -42,6 +109,7 @@ def passenger_login_page():
                 flash("Email or password incorrect")
 
     return render_template("passenger/passenger_login.html")
+
 
 @app.route('/admin/admin_login', methods=['GET', 'POST'])
 def admin_login_page():
@@ -67,9 +135,6 @@ def admin_login_page():
 
     return render_template("admin/admin_login.html")
 
-# @app.route('/admin/admin_login')
-# def admin_login_page():
-#     return render_template("admin/admin_login.html")
 
 @app.route('/signup', methods=('GET', 'POST'))
 def signup_page():
@@ -104,91 +169,11 @@ def signup_page():
 
     return render_template("signup.html", passengers=passengers, admins=admins)
 
-def search_passenger(query):
-    conn = get_db_connection()
-    c = conn.cursor()
-
-    temp = c.execute("SELECT * FROM passengers WHERE passenger_email LIKE ?", (query,)).fetchall()
-    results = (temp[0][0], temp[0][1], temp[0][2], temp[0][3], temp[0][4], temp[0][5])
-
-    conn.close()
-
-    return results
-
-def search_admin(query):
-    conn = get_db_connection()
-    c = conn.cursor()
-
-    temp = c.execute("SELECT * FROM admins WHERE admin_email LIKE ?", (query,)).fetchall()
-    results = (temp[0][0], temp[0][1], temp[0][2], temp[0][3], temp[0][4], temp[0][5])
-
-    conn.close()
-
-    return results
-
-# def search_flights(departure_airport, arrival_airport, departure_date=None):
-#     conn = get_db_connection()
-#     c = conn.cursor()
-
-#     if departure_date is None:
-#         query = """
-#             SELECT *
-#             FROM flights
-#             WHERE depart_loc = ? AND arrive_loc = ?
-#         """
-#         c.execute(query, (departure_airport, arrival_airport,))
-#     else:
-#         query = """
-#             SELECT *
-#             FROM flights
-#             WHERE depart_loc = ? AND arrive_loc = ? AND depart_date = ?
-#         """
-#         c.execute(query, (departure_airport, arrival_airport, departure_date,))
-
-#     matching_flights = c.fetchall()
-#     for flight in matching_flights:
-#         print("Flight[0] from DATE: " + str(flight[0]))
-
-#     conn.close()
-#     return matching_flights
-
-# def search_flights(departure_airport, arrival_airport, departure_date):
-#     conn = get_db_connection()
-#     c = conn.cursor()
-
-#     query = """
-#         SELECT *
-#         FROM flights
-#         WHERE depart_loc = ? AND arrive_loc = ? AND depart_date = ?
-#     """
-#     c.execute(query, (departure_airport, arrival_airport, departure_date,))
-#     matching_flights = c.fetchall()
-#     for flight in matching_flights:
-#         print("Flight[0] from DATE: " + str(flight[0]))
-
-#     conn.close()
-#     return matching_flights
-
-
-def search_flights(departure_airport, arrival_airport):
-    conn = get_db_connection()
-    c = conn.cursor()
-
-    query = """
-        SELECT *
-        FROM flights
-        WHERE depart_loc = ? AND arrive_loc = ?
-    """
-    c.execute(query, (departure_airport, arrival_airport))
-    matching_flights = c.fetchall()
-
-    conn.close()
-    return matching_flights
-
 
 @app.route('/admin/admin_search_passengers')
 def admin_search_passengers():
     return render_template("admin/admin_search_passengers.html")
+
 
 @app.route('/admin/admin_passenger_results', methods=['GET', 'POST'])
 def admin_passenger_results():
@@ -208,6 +193,7 @@ def admin_passenger_results():
 
     return render_template("admin/admin_search_passengers.html")
 
+
 @app.route('/admin/admin_reset_password', methods=['GET', 'POST'])
 def admin_reset_password():
     passenger = session.get('passenger_result')
@@ -222,6 +208,7 @@ def admin_reset_password():
         conn.close()
 
     return render_template("admin/admin_reset_password.html")
+
 
 @app.route('/admin/admin_delete_account', methods=['GET', 'POST'])
 def admin_delete_account():
@@ -238,6 +225,45 @@ def admin_delete_account():
 
             return render_template("admin/admin_search_passengers.html")
     return render_template("admin/admin_delete_account.html")
+
+
+@app.route("/admin/manage_flights", methods=['GET', 'POST'])
+def manage_flights():
+    logged_in_user_role = util_functions.get_logged_in_user_role()
+
+    if logged_in_user_role not "admin":
+        return redirect(url_for("home"))
+    all_flights = util_functions.get_available_flights(None)
+
+    return render_template("admin/manage_flights.html", flights=all_flights)
+
+
+# @app.route('/passenger/edit_info', methods=['GET', 'POST'])
+# def passenger_edit_info():
+#     passenger_id = session.get("logged_in_user")[0]
+
+#     if request.method == 'POST':
+#         entered_email = request.form.get("email")
+#         entered_password = request.form.get("password")
+#         entered_passport_no = request.form.get("passport_no")
+
+#         conn = get_db_connection()
+#         if entered_email:
+#             conn.execute("UPDATE passengers SET passenger_email = ? WHERE passenger_id = ?", (entered_email, passenger_id,))
+#             conn.commit()
+#         if entered_password:
+#             conn.execute("UPDATE passengers SET password = ? WHERE passenger_id = ?", (entered_password, passenger_id,))
+#             conn.commit()
+#         if entered_passport_no:
+#             conn.execute("UPDATE passengers SET passport_no = ? WHERE passenger_id = ?", (entered_passport_no, passenger_id,))
+#             conn.commit()
+
+#         conn.close()
+#     return render_template("passenger/edit_info.html")
+
+
+
+
 
 @app.route('/passenger/edit_info', methods=['GET', 'POST'])
 def passenger_edit_info():
@@ -262,6 +288,7 @@ def passenger_edit_info():
         conn.close()
     return render_template("passenger/edit_info.html")
 
+
 @app.route('/passenger/passenger_search_flights', methods=['GET', 'POST'])
 def passenger_search_flights():
     if request.method == 'POST':
@@ -270,7 +297,18 @@ def passenger_search_flights():
         session['departure_date'] = request.form.get("departure-date")
 
         return redirect(url_for("passenger_flight_results"))
-    return render_template("passenger/passenger_search_flights.html")
+
+    logged_in_user_role = util_functions.get_logged_in_user_role()
+    if logged_in_user_role == "passenger":
+        passenger_id = util_functions.get_logged_in_passenger_id()
+
+        if passenger_id is not None:
+            available_flights = util_functions.get_available_flights(passenger_id)
+        else:
+            available_flights = util_functions.get_available_flights(None)
+
+    return render_template("passenger/passenger_search_flights.html", available_flights=available_flights)
+
 
 @app.route('/passenger/passenger_flight_results', methods=['GET', 'POST'])
 def passenger_flight_results():
@@ -279,10 +317,13 @@ def passenger_flight_results():
     arrival_airport = session.get('arrival_airport')
 
     user_role = session.get("logged_in_user_role")
+    passenger_id = util_functions.get_logged_in_passenger_id()
 
-    flights = search_flights(departure_airport, arrival_airport)
+    matching_flights = search_flights(departure_airport, arrival_airport)
 
     if request.method == "POST":
+        flight_number = request.form.get("flight_number")
+        reservation_status = util_functions.check_reservation_status(passenger_id, flight_number)
         if user_role == "passenger":
             flight_number = request.form.get('flight_number')
             passenger_id = session.get("logged_in_user")[0]
@@ -290,25 +331,60 @@ def passenger_flight_results():
         else:
             session['reserved'] = "False"
 
-    reservation_status = session.get('reserved')
-    print(reservation_status)
-    if reservation_status == "True":
+        reservation_status = session.get('reserved')
+        if reservation_status == "True":
+            conn = get_db_connection()
+            c = conn.cursor()
+
+            c.execute("SELECT * FROM reservations WHERE passenger_id = ? AND flight_no = ?", (passenger_id, flight_number))
+            existing_reservation = c.fetchone()
+            if existing_reservation:
+                flash("Reservation already exists")
+                return redirect(url_for("passenger_search_flights"))
+            else:
+                c.execute("INSERT INTO reservations (passenger_id, flight_no) VALUES (?, ?)", (passenger_id, flight_number))
+                conn.commit()
+                flash("Reservation successful")
+                return redirect(url_for("passenger_search_flights"))
+
+    return render_template("passenger/flight_results.html", flights=matching_flights)
+
+
+@app.route('/passenger/view_reservations', methods=['GET', 'POST'])
+def view_reservations():
+    user_role = session.get("logged_in_user_role")
+
+    if user_role == "passenger":
+        passenger_id = session.get('logged_in_user')[0]
+
         conn = get_db_connection()
         c = conn.cursor()
 
-        c.execute("SELECT * FROM reservations WHERE passenger_id = ? AND flight_no = ?", (passenger_id, flight_number))
-        existing_reservation = c.fetchone()
-        if existing_reservation:
-            flash("Reservation already exists")
-        else:
-            c.execute("INSERT INTO reservations (passenger_id, flight_no) VALUES (?, ?)", (passenger_id, flight_number))
-            conn.commit()
-            flash("Reservation successful")
-    else:
-        if reservation_status == "False":
-            flash("You can't do that")
+        query = """
+            SELECT f.*
+            FROM flights f
+            JOIN reservations r on f.flight_no = r.flight_no
+            WHERE r.passenger_id = ?
+        """
 
-    return render_template("passenger/flight_results.html", flights=flights)
+        c.execute(query, (passenger_id,))
+        reservations = c.fetchall()
+
+        if request.method == "POST":
+            flight_number = request.form.get("flight_number")
+            c.execute("SELECT * FROM reservations WHERE passenger_id = ? AND flight_no = ?", (passenger_id, flight_number,))
+            reservation = c.fetchone()
+
+            if reservation:
+                c.execute("DELETE FROM reservations WHERE passenger_id = ? AND flight_no = ?", (passenger_id, flight_number,))
+                conn.commit()
+                flash("Reservation cancelled")
+                return redirect(url_for("view_reservations"))
+    else:
+        flash("You can't do that")
+
+    return render_template("passenger/view_reservations.html", reservations=reservations)
+
 
 @app.route('/notready')
 def not_ready_page():

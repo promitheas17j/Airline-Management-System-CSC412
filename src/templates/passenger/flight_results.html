@@ -33,13 +33,16 @@
 			<td>{{ flight.depart_time }}</td>
 			<td>{{ flight.depart_country }}</td>
 			<td>{{ flight.arrive_country }}</td>
-			<td>
-				<form method="post" action="#">
-					<!-- <input type="submit" id="reserve-flight" name="reserve-flight" value="{{ flight.flight_no }}" class="btn btn-primary"> -->
-					<input type="hidden" name="flight_number" value="{{ flight.flight_no }}">
-					<button type="submit" class="btn btn-primary">Reserve this flight</button>
-				</form>
-			</td>
+			{% if flight[8] == 0 %}
+				<td>
+					<form method="post" action="#">
+						<input type="hidden" name="flight_number" value="{{ flight.flight_no }}">
+						<button type="submit" class="btn btn-primary">Reserve this flight</button>
+					</form>
+				</td>
+			{% else %}
+				<td>Reserved</td>
+			{% endif %}
 		</tr>
 		{% endfor %}
 	</tbody>
