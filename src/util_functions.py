@@ -7,6 +7,7 @@ db_file_name = 'database.db'
 def get_db_connection():
     conn = sqlite3.connect(db_file_name)
     conn.row_factory = sqlite3.Row
+
     return conn
 
 

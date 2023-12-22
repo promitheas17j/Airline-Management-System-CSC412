@@ -20,14 +20,14 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td><input type="text" placeholder="Flight Number" class="form-control" name="flight_number" required></td>
+				<td><input type="text" pattern="[A-Z]{2}[0-9]{4}" placeholder="Flight Number" class="form-control" name="flight_number" required></td>
 				<td>
 					<div class="text-center">
 						<input type="checkbox" class="form-check-input" name="international" checked>
 					</div>
 				</td>
-				<td><input type="text" placeholder="Departure Airport" class="form-control" name="depart_loc" required></td>
-				<td><input type="text" placeholder="Arrival Airport" class="form-control" name="arrive_loc" required></td>
+				<td><input type="text" pattern="[A-z]{3}" placeholder="Departure Airport" class="form-control" name="depart_loc" required></td>
+				<td><input type="text" pattern="[A-z]{3}" placeholder="Arrival Airport" class="form-control" name="arrive_loc" required></td>
 				<td><input type="date" class="form-control" name="depart_date" required></td>
 				<td><input type="time" step="1" class="form-control" name="depart_time" required></td>
 				<td><input type="text" placeholder="Departure Country" class="form-control" name="depart_country" required></td>

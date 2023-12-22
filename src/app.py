@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, url_for, flash, redirect, session
-import sqlite3
+import sqlite3, unittest
 import util_functions
 
 app = Flask(__name__)
@@ -295,7 +295,6 @@ def passenger_search_flights():
     if request.method == 'POST':
         session['departure_airport'] = request.form.get("departure-loc")
         session['arrival_airport'] = request.form.get("arrival-loc")
-        session['departure_date'] = request.form.get("departure-date")
 
         return redirect(url_for("passenger_flight_results"))
 
@@ -460,6 +459,22 @@ def no_access():
 @app.route('/notready')
 def not_ready_page():
     return render_template("not_built_yet.html", role=util_functions.get_logged_in_user_role())
+
+
+class TestUtilFunctions(unittest.TestCase):
+    def test_get_db_connection(self):
+        self.assertIsInstance(util_functions.get_db_connection(), sqlite3.Connection)
+
+
+    def test_set_session_reservation_status(self):
+        util_functions.set_session_reservation_status("None")
+        self.assertIs(session["reserved"], "None")
+
+        util_functions.set_session_reservation_status("True")
+        self.assertIs(session["reserved"], "True")
+
+        util_functions.set_session_reservation_status("False")
+        self.assertIs(session["reserved"], "False")
 
 
 if __name__ == "__main__":
