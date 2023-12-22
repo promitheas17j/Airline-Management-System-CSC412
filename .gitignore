@@ -2,3 +2,4 @@ env/
 src/__pycache__/
 page_list
 src/database.db
+src/static/images/*.png
