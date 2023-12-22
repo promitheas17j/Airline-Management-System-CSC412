@@ -13,12 +13,12 @@
 				padding: 20px;
 				margin: 5px;
 				color: #970020;
-				background-color: #ffd5de;
+				/* background-color: #ffd5de; */
 			}
 		</style>
 	</head>
 
-	<body class="bg-dark mt-2">
+	<body class="bg-dark mt-2" style="background-image: url('/static/images/jet2.jpg'); height: 100%;">
 	<!-- Navbar -->
 		<nav class="navbar navbar-expand-sm bg-primary navbar-dark">
 			<div class="container-fluid">
@@ -59,7 +59,7 @@
 
 
 		<!-- Main content -->
-		<div class="container p-5 mt-5 bg-secondary">
+		<div class="container p-5 mt-5 bg-secondary" >
 			{% for message in get_flashed_messages() %}
 				<div class="alert">{{ message }}</div>
 			{% endfor %}
