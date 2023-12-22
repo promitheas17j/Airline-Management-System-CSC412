@@ -351,40 +351,40 @@ def passenger_flight_results():
     return render_template("passenger/flight_results.html", flights=matching_flights, role=util_functions.get_logged_in_user_role())
 
 
+# @app.route('/passenger/view_reservations', methods=['GET', 'POST'])
+# def passenger_view_reservations():
+#     logged_in_user_role = util_functions.get_logged_in_user_role()
+#     if logged_in_user_role != "passenger":
+#         return redirect(url_for("home"))
+
+#     passenger_id = util_functions.get_logged_in_passenger_id()
+
+#     conn = util_functions.get_db_connection()
+#     c = conn.cursor()
+#     query = """
+#         SELECT f.*
+#         FROM flights f
+#         JOIN reservations r on f.flight_no = r.flight_no
+#         WHERE r.passenger_id = ?
+#     """
+#     c.execute(query, (passenger_id,))
+#     reservations = c.fetchall()
+
+#     if request.method == "POST":
+#         flight_number = request.form.get("flight_number")
+#         c.execute("SELECT * FROM reservations WHERE passenger_id = ? AND flight_no = ?", (passenger_id, flight_number,))
+#         reservation = c.fetchone()
+
+#         if reservation:
+#             c.execute("DELETE FROM reservations WHERE passenger_id = ? AND flight_no = ?", (passenger_id, flight_number,))
+#             conn.commit()
+#             flash("Reservation cancelled")
+#             return redirect(url_for("passenger_view_reservations"))
+#     return render_template("passenger/view_reservations.html", reservations=reservations, role=util_functions.get_logged_in_user_role())
+
+
 @app.route('/passenger/view_reservations', methods=['GET', 'POST'])
 def passenger_view_reservations():
-    logged_in_user_role = util_functions.get_logged_in_user_role()
-    if logged_in_user_role != "passenger":
-        return redirect(url_for("home"))
-
-    passenger_id = util_functions.get_logged_in_passenger_id()
-
-    conn = util_functions.get_db_connection()
-    c = conn.cursor()
-    query = """
-        SELECT f.*
-        FROM flights f
-        JOIN reservations r on f.flight_no = r.flight_no
-        WHERE r.passenger_id = ?
-    """
-    c.execute(query, (passenger_id,))
-    reservations = c.fetchall()
-
-    if request.method == "POST":
-        flight_number = request.form.get("flight_number")
-        c.execute("SELECT * FROM reservations WHERE passenger_id = ? AND flight_no = ?", (passenger_id, flight_number,))
-        reservation = c.fetchone()
-
-        if reservation:
-            c.execute("DELETE FROM reservations WHERE passenger_id = ? AND flight_no = ?", (passenger_id, flight_number,))
-            conn.commit()
-            flash("Reservation cancelled")
-            return redirect(url_for("passenger_view_reservations"))
-    return render_template("passenger/view_reservations.html", reservations=reservations, role=util_functions.get_logged_in_user_role())
-
-
-@app.route('/passenger/view_cart', methods=['GET', 'POST'])
-def passenger_view_cart():
     logged_in_user_role = util_functions.get_logged_in_user_role()
     if logged_in_user_role != "passenger":
         return redirect(url_for("home"))
@@ -400,7 +400,43 @@ def passenger_view_cart():
         WHERE b.passenger_id = ?
     """
     c.execute(query, (passenger_id,))
+    bookings = c.fetchall()
+
+    if request.method == "POST":
+        flight_number = request.form.get("flight_number")
+        c.execute("SELECT * FROM booked_flights WHERE passenger_id = ? AND flight_no = ?", (passenger_id, flight_number,))
+        booking = c.fetchone()
+
+        if booking:
+            c.execute("DELETE FROM booked_flights WHERE passenger_id = ? AND flight_no = ?", (passenger_id, flight_number,))
+            c.execute("DELETE FROM reservations WHERE passenger_id = ? AND flight_no = ?", (passenger_id, flight_number,))
+            conn.commit()
+            flash("Booking cancelled")
+            return redirect(url_for("passenger_view_reservations"))
+    return render_template("passenger/view_reservations.html", bookings=bookings, role=util_functions.get_logged_in_user_role())
+
+
+
+@app.route('/passenger/view_cart', methods=['GET', 'POST'])
+def passenger_view_cart():
+    logged_in_user_role = util_functions.get_logged_in_user_role()
+    if logged_in_user_role != "passenger":
+        return redirect(url_for("home"))
+
+    passenger_id = util_functions.get_logged_in_passenger_id()
+    print("passenger_id " + str(passenger_id))
+
+    conn = util_functions.get_db_connection()
+    c = conn.cursor()
+    query = """
+        SELECT f.*
+        FROM flights f
+        JOIN reservations r on f.flight_no = r.flight_no
+        WHERE r.passenger_id = ?
+    """
+    c.execute(query, (passenger_id,))
     reservations = c.fetchall()
+    print("reservations " + str(reservations))
 
     if request.method == "POST":
         flight_number = request.form.get("flight_number")
@@ -408,8 +444,8 @@ def passenger_view_cart():
         reservation = c.fetchone()
 
         if reservation:
-            # c.execute("DELETE FROM reservations WHERE passenger_id = ? AND flight_no = ?", (passenger_id, flight_number,))
-            c.execute("INSERT INTO booked_flights VALUES (?, ?)", (passenger_id, flight_number,))
+            c.execute("DELETE FROM reservations WHERE passenger_id = ? AND flight_no = ?", (passenger_id, flight_number,))
+            c.execute("INSERT INTO booked_flights (passenger_id, flight_no) VALUES (?, ?)", (passenger_id, flight_number,))
             conn.commit()
             flash(f"Payment for flight {flight_number} complete!")
             return redirect(url_for("passenger_view_cart"))
