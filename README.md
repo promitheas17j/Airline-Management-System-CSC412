@@ -1,3 +1,6 @@
+> [!WARNING]
+> This repository has been migrated to https://codeberg.org/promitheas/Airline-Management-System-CSC412
+
 # Airline-Management-System-CSC412
 Group project for CSC412 course, F2023
 
